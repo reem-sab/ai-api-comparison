@@ -34,6 +34,13 @@ I spent weeks working with both OpenAI and Anthropic APIs, digging through docs,
 - [ ] Cost calculator
 - [ ] Migration guides
 
+## 📖 Guides Available
+
+| Guide | Status | Key Takeaway |
+|-------|--------|--------------|
+| [OpenAI Quickstart](./getting-started/openai-quickstart.md) | ✅ Complete | Industry standard, higher cost |
+| [Anthropic Quickstart](./getting-started/anthropic-quickstart.md) | ✅ Complete | 70% cheaper input, longer context |
+
 ## 🤝 Contributing
 
 Found something wrong? Have a use case to add? PRs welcome!

@@ -28,7 +28,7 @@ I spent weeks working with both OpenAI and Anthropic APIs, digging through docs,
 ## 🗺️ Roadmap
 
 - [x] Project setup
-- [ ] Getting started guides
+- [x] Getting started guides
 - [ ] Chatbot comparison
 - [ ] Code generation comparison
 - [ ] Cost calculator

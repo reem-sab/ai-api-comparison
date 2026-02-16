@@ -41,6 +41,20 @@ I spent weeks working with both OpenAI and Anthropic APIs, digging through docs,
 | [OpenAI Quickstart](./getting-started/openai-quickstart.md) | ✅ Complete | Industry standard, higher cost |
 | [Anthropic Quickstart](./getting-started/anthropic-quickstart.md) | ✅ Complete | 70% cheaper input, longer context |
 
+## 📚 What's Inside
+
+### Getting Started
+- [OpenAI API Quickstart](./getting-started/openai-quickstart.md) - Your first API call in 15 minutes
+- [Anthropic Claude API Quickstart](./getting-started/anthropic-quickstart.md) - Get started with Claude
+
+### Deep Comparisons
+- [Building a Chatbot: OpenAI vs Anthropic](./comparisons/chatbot-comparison.md) - Side-by-side implementation with working code, cost analysis, and production considerations
+
+### Coming Soon
+- Cost calculator tool
+- Code generation comparison
+- Migration guides
+
 ## 🤝 Contributing
 
 Found something wrong? Have a use case to add? PRs welcome!

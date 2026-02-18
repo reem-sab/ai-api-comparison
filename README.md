@@ -29,7 +29,7 @@ I spent weeks working with both OpenAI and Anthropic APIs, digging through docs,
 
 ### 🛠️ Interactive Tools
 - **[Cost Calculator](./tools/cost-calculator.html)** - Compare monthly costs based on your usage  
-  [Try it live →](https://reemsabawi.github.io/ai-api-comparison/tools/cost-calculator.html)
+  [Try it live →](https://reem-sab.github.io/ai-api-comparison/tools/cost-calculator.html)
 
 ## 🗺️ Roadmap
 

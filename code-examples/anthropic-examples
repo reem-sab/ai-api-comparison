@@ -1,0 +1,284 @@
+# Anthropic Claude API - Basic Examples
+
+Simple, copy-paste-ready code examples for getting started with Anthropic's Claude API.
+
+## Prerequisites
+
+```bash
+pip install anthropic
+```
+
+## 1. Basic Chat Completion
+
+The simplest way to get a response from Claude:
+
+```python
+import anthropic
+
+client = anthropic.Anthropic(api_key="your-api-key-here")
+
+message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=1024,
+    messages=[
+        {"role": "user", "content": "Explain APIs in one sentence."}
+    ]
+)
+
+print(message.content[0].text)
+```
+
+**Output:**
+```
+An API (Application Programming Interface) is a set of protocols and tools that allows different software applications to communicate and share data with each other.
+```
+
+**Key difference from OpenAI:** `max_tokens` is required!
+
+---
+
+## 2. With System Prompt
+
+Claude handles system prompts as a separate parameter:
+
+```python
+import anthropic
+
+client = anthropic.Anthropic(api_key="your-api-key-here")
+
+message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=1024,
+    system="You are a helpful coding assistant. Be concise.",
+    messages=[
+        {"role": "user", "content": "How do I reverse a string in Python?"}
+    ]
+)
+
+print(message.content[0].text)
+```
+
+**Pro tip:** System prompts are MORE effective with Claude than other models. Use them!
+
+---
+
+## 3. Multi-turn Conversation
+
+Keep conversation history to maintain context:
+
+```python
+import anthropic
+
+client = anthropic.Anthropic(api_key="your-api-key-here")
+
+# Conversation history
+messages = [
+    {"role": "user", "content": "What's the capital of France?"}
+]
+
+# First response
+message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=1024,
+    messages=messages
+)
+
+# Add assistant's response to history
+messages.append({
+    "role": "assistant",
+    "content": message.content[0].text
+})
+
+# Ask follow-up
+messages.append({
+    "role": "user",
+    "content": "What's the population?"
+})
+
+# Second response (with context)
+message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=1024,
+    messages=messages
+)
+
+print(message.content[0].text)
+```
+
+**Note:** Claude has a 200k token context window - much larger than OpenAI's 128k!
+
+---
+
+## 4. Streaming Response
+
+Get responses word-by-word as they're generated:
+
+```python
+import anthropic
+
+client = anthropic.Anthropic(api_key="your-api-key-here")
+
+print("Response: ", end="")
+
+with client.messages.stream(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=1024,
+    messages=[
+        {"role": "user", "content": "Write a haiku about coding."}
+    ]
+) as stream:
+    for text in stream.text_stream:
+        print(text, end="", flush=True)
+
+print()  # New line at end
+```
+
+**Why use streaming:** Better UX for long responses - users see output immediately.
+
+**Note:** Claude's streaming API uses a context manager (the `with` statement) - cleaner than OpenAI's approach!
+
+---
+
+## 5. Error Handling
+
+Always wrap API calls in try-except:
+
+```python
+import anthropic
+import time
+
+client = anthropic.Anthropic(api_key="your-api-key-here")
+
+def chat_with_retry(messages, max_retries=3):
+    """Make API call with automatic retry on errors"""
+    for attempt in range(max_retries):
+        try:
+            message = client.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=1024,
+                messages=messages
+            )
+            return message.content[0].text
+            
+        except Exception as e:
+            if attempt == max_retries - 1:
+                raise  # Give up after max retries
+            print(f"Error: {e}. Retrying in {2**attempt} seconds...")
+            time.sleep(2**attempt)  # Exponential backoff
+
+# Usage
+try:
+    response = chat_with_retry([
+        {"role": "user", "content": "Hello!"}
+    ])
+    print(response)
+except Exception as e:
+    print(f"Failed after retries: {e}")
+```
+
+**Common errors:**
+- `AuthenticationError` - Invalid API key
+- `OverloadedError` - API is busy (retry helps!)
+- `RateLimitError` - Too many requests
+
+---
+
+## 6. Checking Token Usage
+
+Monitor your costs by tracking tokens:
+
+```python
+import anthropic
+
+client = anthropic.Anthropic(api_key="your-api-key-here")
+
+message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=1024,
+    messages=[
+        {"role": "user", "content": "Explain machine learning."}
+    ]
+)
+
+# Get token usage
+usage = message.usage
+print(f"Input tokens: {usage.input_tokens}")
+print(f"Output tokens: {usage.output_tokens}")
+
+# Calculate cost (Claude 3.5 Sonnet pricing)
+input_cost = (usage.input_tokens / 1_000_000) * 3   # $3 per 1M tokens
+output_cost = (usage.output_tokens / 1_000_000) * 15  # $15 per 1M tokens
+total_cost = input_cost + output_cost
+
+print(f"\nEstimated cost: ${total_cost:.6f}")
+```
+
+**Notice:** Claude is 70% cheaper for input tokens ($3 vs $10)!
+
+---
+
+## 7. The max_tokens "Gotcha"
+
+This is the #1 mistake people make with Claude:
+
+```python
+import anthropic
+
+client = anthropic.Anthropic(api_key="your-api-key-here")
+
+# ❌ This will error!
+message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    messages=[
+        {"role": "user", "content": "Hello"}
+    ]
+)
+# Error: missing required argument: 'max_tokens'
+
+# ✅ This works
+message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=1024,  # Always required!
+    messages=[
+        {"role": "user", "content": "Hello"}
+    ]
+)
+```
+
+**Remember:** Unlike OpenAI, `max_tokens` is NOT optional with Claude.
+
+**How to choose:**
+- Short responses: 1024
+- Medium responses: 2048-4096
+- Long responses: 8192 (max)
+
+---
+
+## Next Steps
+
+- Compare with [OpenAI examples](../openai-examples.md)
+- Read the [chatbot comparison](../../comparisons/chatbot-comparison.md)
+- Try the [cost calculator](../../tools/cost-calculator.html)
+
+## Common Pitfalls
+
+❌ **Forgetting max_tokens** - Most common error!  
+❌ **Hardcoding API keys** - Use environment variables  
+❌ **Not using system prompts** - Claude responds really well to them  
+❌ **Ignoring the 200k context window** - Claude can handle MUCH longer conversations  
+
+## Key Differences from OpenAI
+
+| Feature | OpenAI | Claude |
+|---------|--------|--------|
+| max_tokens | Optional | **Required** |
+| System prompt | In messages array | Separate parameter |
+| Response structure | `.choices[0].message.content` | `.content[0].text` |
+| Context window | 128k tokens | 200k tokens |
+| Streaming | Iterator | Context manager |
+
+## Resources
+
+- [Anthropic API Documentation](https://docs.anthropic.com)
+- [Claude Model Card](https://www.anthropic.com/claude)
+- [Pricing](https://www.anthropic.com/pricing)

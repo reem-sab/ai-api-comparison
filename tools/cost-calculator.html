@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAI vs Anthropic Cost Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .calculator {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #1a202c;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-option:hover {
+            border-color: #667eea;
+            background: #f7fafc;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .radio-option.selected {
+            border-color: #667eea;
+            background: #edf2f7;
+        }
+
+        .radio-label {
+            flex: 1;
+        }
+
+        .radio-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .radio-desc {
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .provider-card {
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .provider-card.winner {
+            border-color: #48bb78;
+            background: #f0fff4;
+        }
+
+        .provider-name {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .provider-cost {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .per-month {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .winner-badge {
+            display: inline-block;
+            background: #48bb78;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .savings {
+            background: #edf2f7;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .savings-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #48bb78;
+            margin-bottom: 4px;
+        }
+
+        .savings-text {
+            font-size: 14px;
+            color: #718096;
+        }
+
+        .breakdown {
+            margin-top: 20px;
+            padding: 16px;
+            background: #f7fafc;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #4a5568;
+        }
+
+        .breakdown-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            .calculator {
+                padding: 24px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .provider-cost {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>💰 AI API Cost Calculator</h1>
+        <p class="subtitle">Compare costs between OpenAI and Anthropic APIs</p>
+
+        <div class="input-group">
+            <label for="requests">How many API calls per month?</label>
+            <input type="number" id="requests" placeholder="e.g., 10000" min="1" value="10000">
+        </div>
+
+        <div class="input-group">
+            <label>Average request size:</label>
+            <div class="radio-group">
+                <div class="radio-option" onclick="selectOption(this, 'small')">
+                    <input type="radio" name="size" value="small" id="small" checked>
+                    <div class="radio-label">
+                        <div class="radio-title">Small (~500 tokens)</div>
+                        <div class="radio-desc">Quick questions, simple chat</div>
+                    </div>
+                </div>
+                <div class="radio-option" onclick="selectOption(this, 'medium')">
+                    <input type="radio" name="size" value="medium" id="medium">
+                    <div class="radio-label">
+                        <div class="radio-title">Medium (~2000 tokens)</div>
+                        <div class="radio-desc">Analysis, summaries, code generation</div>
+                    </div>
+                </div>
+                <div class="radio-option" onclick="selectOption(this, 'large')">
+                    <input type="radio" name="size" value="large" id="large">
+                    <div class="radio-label">
+                        <div class="radio-title">Large (~5000 tokens)</div>
+                        <div class="radio-desc">Document processing, long conversations</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="calculate-btn" onclick="calculateCosts()">Calculate Costs</button>
+
+        <div class="results" id="results">
+            <div class="results-header">Monthly Cost Comparison</div>
+            
+            <div class="comparison">
+                <div class="provider-card" id="openai-card">
+                    <div class="provider-name">OpenAI GPT-4 Turbo</div>
+                    <div class="provider-cost" id="openai-cost">$0</div>
+                    <div class="per-month">per month</div>
+                    <div id="openai-winner"></div>
+                </div>
+                <div class="provider-card" id="anthropic-card">
+                    <div class="provider-name">Anthropic Claude 3.5</div>
+                    <div class="provider-cost" id="anthropic-cost">$0</div>
+                    <div class="per-month">per month</div>
+                    <div id="anthropic-winner"></div>
+                </div>
+            </div>
+
+            <div class="savings" id="savings">
+                <div class="savings-amount" id="savings-amount">$0</div>
+                <div class="savings-text" id="savings-text">You save per month</div>
+            </div>
+
+            <div class="breakdown">
+                <div class="breakdown-title">Cost Breakdown</div>
+                <div class="breakdown-item">
+                    <span>Total requests:</span>
+                    <span id="total-requests">0</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Avg tokens per request:</span>
+                    <span id="avg-tokens">0</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Total tokens per month:</span>
+                    <span id="total-tokens">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Part of the <a href="[https://github.com/reem-sab/ai-api-comparison]" target="_blank">AI API Comparison Project</a>
+        </div>
+    </div>
+
+    <script>
+        // Pricing data (per 1M tokens)
+        const pricing = {
+            openai: {
+                input: 10,
+                output: 30
+            },
+            anthropic: {
+                input: 3,
+                output: 15
+            }
+        };
+
+        // Token estimates for different use cases
+        const tokenSizes = {
+            small: { input: 300, output: 200 },
+            medium: { input: 1200, output: 800 },
+            large: { input: 3000, output: 2000 }
+        };
+
+        function selectOption(element, value) {
+            // Remove selected class from all options
+            document.querySelectorAll('.radio-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            // Check the radio button
+            document.getElementById(value).checked = true;
+        }
+
+        function calculateCosts() {
+            const requests = parseInt(document.getElementById('requests').value);
+            const size = document.querySelector('input[name="size"]:checked').value;
+
+            if (!requests || requests <= 0) {
+                alert('Please enter a valid number of requests');
+                return;
+            }
+
+            const tokens = tokenSizes[size];
+            const totalInputTokens = requests * tokens.input;
+            const totalOutputTokens = requests * tokens.output;
+            const totalTokens = totalInputTokens + totalOutputTokens;
+
+            // Calculate costs
+            const openaiCost = (
+                (totalInputTokens / 1000000) * pricing.openai.input +
+                (totalOutputTokens / 1000000) * pricing.openai.output
+            );
+
+            const anthropicCost = (
+                (totalInputTokens / 1000000) * pricing.anthropic.input +
+                (totalOutputTokens / 1000000) * pricing.anthropic.output
+            );
+
+            const savings = Math.abs(openaiCost - anthropicCost);
+            const winner = openaiCost < anthropicCost ? 'openai' : 'anthropic';
+
+            // Update UI
+            document.getElementById('openai-cost').textContent = '$' + openaiCost.toFixed(2);
+            document.getElementById('anthropic-cost').textContent = '$' + anthropicCost.toFixed(2);
+            document.getElementById('savings-amount').textContent = '$' + savings.toFixed(2);
+            
+            // Update winner
+            document.getElementById('openai-card').classList.remove('winner');
+            document.getElementById('anthropic-card').classList.remove('winner');
+            document.getElementById('openai-winner').innerHTML = '';
+            document.getElementById('anthropic-winner').innerHTML = '';
+            
+            if (winner === 'openai') {
+                document.getElementById('openai-card').classList.add('winner');
+                document.getElementById('openai-winner').innerHTML = '<span class="winner-badge">Best Value</span>';
+                document.getElementById('savings-text').textContent = 'saved with OpenAI per month';
+            } else {
+                document.getElementById('anthropic-card').classList.add('winner');
+                document.getElementById('anthropic-winner').innerHTML = '<span class="winner-badge">Best Value</span>';
+                document.getElementById('savings-text').textContent = 'saved with Anthropic per month';
+            }
+
+            // Update breakdown
+            document.getElementById('total-requests').textContent = requests.toLocaleString();
+            document.getElementById('avg-tokens').textContent = (tokens.input + tokens.output).toLocaleString();
+            document.getElementById('total-tokens').textContent = totalTokens.toLocaleString();
+
+            // Show results
+            document.getElementById('results').classList.add('show');
+            
+            // Scroll to results on mobile
+            setTimeout(() => {
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+
+        // Set initial selected state
+        document.querySelector('.radio-option').classList.add('selected');
+
+        // Allow Enter key to calculate
+        document.getElementById('requests').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculateCosts();
+            }
+        });
+    </script>
+</body>
+</html>

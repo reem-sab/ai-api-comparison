@@ -55,6 +55,19 @@ I spent weeks working with both OpenAI and Anthropic APIs, digging through docs,
 - Code generation comparison
 - Migration guides
 
+## 🛠️ Interactive Tools
+
+### [Cost Calculator](./tools/cost-calculator.html)
+Compare monthly costs between OpenAI and Anthropic APIs based on your usage. Interactive web tool with real-time calculations.
+
+**Features:**
+- Estimate costs based on request volume
+- Choose between different use cases (chat, analysis, documents)
+- See instant cost comparison
+- Calculate monthly savings
+
+[Try it live →](#) *(add URL after deploying)*
+
 ## 🤝 Contributing
 
 Found something wrong? Have a use case to add? PRs welcome!

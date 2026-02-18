@@ -1,0 +1,230 @@
+# OpenAI API - Basic Examples
+
+Simple, copy-paste-ready code examples for getting started with OpenAI's API.
+
+## Prerequisites
+
+```bash
+pip install openai
+```
+
+## 1. Basic Chat Completion
+
+The simplest way to get a response from GPT-4:
+
+```python
+from openai import OpenAI
+
+client = OpenAI(api_key="your-api-key-here")
+
+response = client.chat.completions.create(
+    model="gpt-4-turbo-preview",
+    messages=[
+        {"role": "user", "content": "Explain APIs in one sentence."}
+    ]
+)
+
+print(response.choices[0].message.content)
+```
+
+**Output:**
+```
+An API (Application Programming Interface) is a set of rules that allows different software applications to communicate with each other.
+```
+
+---
+
+## 2. With System Prompt
+
+Add a system prompt to guide the AI's behavior:
+
+```python
+from openai import OpenAI
+
+client = OpenAI(api_key="your-api-key-here")
+
+response = client.chat.completions.create(
+    model="gpt-4-turbo-preview",
+    messages=[
+        {"role": "system", "content": "You are a helpful coding assistant. Be concise."},
+        {"role": "user", "content": "How do I reverse a string in Python?"}
+    ]
+)
+
+print(response.choices[0].message.content)
+```
+
+**Pro tip:** System prompts help maintain consistent behavior across conversations.
+
+---
+
+## 3. Multi-turn Conversation
+
+Keep conversation history to maintain context:
+
+```python
+from openai import OpenAI
+
+client = OpenAI(api_key="your-api-key-here")
+
+# Conversation history
+messages = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "What's the capital of France?"},
+]
+
+# First response
+response = client.chat.completions.create(
+    model="gpt-4-turbo-preview",
+    messages=messages
+)
+
+# Add assistant's response to history
+messages.append({
+    "role": "assistant",
+    "content": response.choices[0].message.content
+})
+
+# Ask follow-up
+messages.append({
+    "role": "user",
+    "content": "What's the population?"
+})
+
+# Second response (with context)
+response = client.chat.completions.create(
+    model="gpt-4-turbo-preview",
+    messages=messages
+)
+
+print(response.choices[0].message.content)
+```
+
+**Output:**
+```
+Paris, the capital of France, has a population of approximately 2.2 million people within the city limits...
+```
+
+---
+
+## 4. Streaming Response
+
+Get responses word-by-word as they're generated:
+
+```python
+from openai import OpenAI
+
+client = OpenAI(api_key="your-api-key-here")
+
+stream = client.chat.completions.create(
+    model="gpt-4-turbo-preview",
+    messages=[
+        {"role": "user", "content": "Write a haiku about coding."}
+    ],
+    stream=True
+)
+
+print("Response: ", end="")
+for chunk in stream:
+    if chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="", flush=True)
+print()  # New line at end
+```
+
+**Why use streaming:** Better UX for long responses - users see output immediately.
+
+---
+
+## 5. Error Handling
+
+Always wrap API calls in try-except:
+
+```python
+from openai import OpenAI
+import time
+
+client = OpenAI(api_key="your-api-key-here")
+
+def chat_with_retry(messages, max_retries=3):
+    """Make API call with automatic retry on errors"""
+    for attempt in range(max_retries):
+        try:
+            response = client.chat.completions.create(
+                model="gpt-4-turbo-preview",
+                messages=messages
+            )
+            return response.choices[0].message.content
+            
+        except Exception as e:
+            if attempt == max_retries - 1:
+                raise  # Give up after max retries
+            print(f"Error: {e}. Retrying in {2**attempt} seconds...")
+            time.sleep(2**attempt)  # Exponential backoff
+
+# Usage
+try:
+    response = chat_with_retry([
+        {"role": "user", "content": "Hello!"}
+    ])
+    print(response)
+except Exception as e:
+    print(f"Failed after retries: {e}")
+```
+
+**Common errors:**
+- `AuthenticationError` - Invalid API key
+- `RateLimitError` - Too many requests
+- `APIConnectionError` - Network issues
+
+---
+
+## 6. Checking Token Usage
+
+Monitor your costs by tracking tokens:
+
+```python
+from openai import OpenAI
+
+client = OpenAI(api_key="your-api-key-here")
+
+response = client.chat.completions.create(
+    model="gpt-4-turbo-preview",
+    messages=[
+        {"role": "user", "content": "Explain machine learning."}
+    ]
+)
+
+# Get token usage
+usage = response.usage
+print(f"Prompt tokens: {usage.prompt_tokens}")
+print(f"Completion tokens: {usage.completion_tokens}")
+print(f"Total tokens: {usage.total_tokens}")
+
+# Calculate cost (GPT-4 Turbo pricing)
+input_cost = (usage.prompt_tokens / 1_000_000) * 10  # $10 per 1M tokens
+output_cost = (usage.completion_tokens / 1_000_000) * 30  # $30 per 1M tokens
+total_cost = input_cost + output_cost
+
+print(f"\nEstimated cost: ${total_cost:.6f}")
+```
+
+---
+
+## Next Steps
+
+- Check out the [Anthropic examples](../anthropic-examples.md) for comparison
+- Read the [chatbot comparison](../../comparisons/chatbot-comparison.md)
+- Try the [cost calculator](../../tools/cost-calculator.html)
+
+## Common Pitfalls
+
+❌ **Don't hardcode API keys** - Use environment variables  
+❌ **Don't skip error handling** - APIs fail sometimes  
+❌ **Don't forget to track tokens** - Costs add up fast  
+❌ **Don't store conversation history forever** - You'll hit context limits  
+
+## Resources
+
+- [OpenAI API Documentation](https://platform.openai.com/docs)
+- [OpenAI Cookbook](https://github.com/openai/openai-cookbook)
+- [Pricing Calculator](https://openai.com/pricing)

@@ -1,19 +1,12 @@
 # AI API Comparison Guide 🤖
 
-> An honest, developer-focused comparison of OpenAI and Anthropic APIs. 
+> An honest, developer-focused comparison of OpenAI and Anthropic APIs - built by a developer, for developers.
 
 ## 🎯 Why This Guide Exists
 
 I spent weeks working with both OpenAI and Anthropic APIs, digging through docs, debugging issues, and burning through API credits. This guide shares what I learned so you don't have to.
 
 **This is NOT marketing material.** It's real experiences, actual code, and honest comparisons.
-
-## 📚 What's Covered
-
-- [Getting Started Guides](./getting-started/) - Side-by-side setup tutorials
-- [Feature Comparisons](./comparisons/) - Deep dives into specific capabilities
-- [Code Examples](./code-examples/) - Working code for common tasks
-- [Cost Analysis](./resources/) - Real pricing breakdowns
 
 ## 🚀 Quick Comparison
 
@@ -25,48 +18,27 @@ I spent weeks working with both OpenAI and Anthropic APIs, digging through docs,
 | Function Calling | ✅ Yes | ✅ Yes |
 | Vision | ✅ Yes | ✅ Yes |
 
-## 🗺️ Roadmap
-
-- [x] Project setup
-- [x] Getting started guides
-- [x] Chatbot comparison
-- [ ] Code generation comparison
-- [x] Interactive cost calculator tool ← NEW!
-- [ ] Migration guides
-
-## 📖 Guides Available
-
-| Guide | Status | Key Takeaway |
-|-------|--------|--------------|
-| [OpenAI Quickstart](./getting-started/openai-quickstart.md) | ✅ Complete | Industry standard, higher cost |
-| [Anthropic Quickstart](./getting-started/anthropic-quickstart.md) | ✅ Complete | 70% cheaper input, longer context |
-
 ## 📚 What's Inside
 
-### Getting Started
+### Getting Started Guides
 - [OpenAI API Quickstart](./getting-started/openai-quickstart.md) - Your first API call in 15 minutes
 - [Anthropic Claude API Quickstart](./getting-started/anthropic-quickstart.md) - Get started with Claude
 
 ### Deep Comparisons
 - [Building a Chatbot: OpenAI vs Anthropic](./comparisons/chatbot-comparison.md) - Side-by-side implementation with working code, cost analysis, and production considerations
 
-### Coming Soon
-- Cost calculator tool
-- Code generation comparison
-- Migration guides
+### 🛠️ Interactive Tools
+- **[Cost Calculator](./tools/cost-calculator.html)** - Compare monthly costs based on your usage  
+  [Try it live →](https://reemsabawi.github.io/ai-api-comparison/tools/cost-calculator.html)
 
-## 🛠️ Interactive Tools
+## 🗺️ Roadmap
 
-### [Cost Calculator](./tools/cost-calculator.html)
-Compare monthly costs between OpenAI and Anthropic APIs based on your usage. Interactive web tool with real-time calculations.
-
-**Features:**
-- Estimate costs based on request volume
-- Choose between different use cases (chat, analysis, documents)
-- See instant cost comparison
-- Calculate monthly savings
-
-[Try it live →](#) *(add URL after deploying)*
+- [x] Project setup
+- [x] Getting started guides (OpenAI & Anthropic)
+- [x] Chatbot comparison with real code
+- [x] Interactive cost calculator tool
+- [ ] Code generation comparison
+- [ ] Migration guides
 
 ## 🤝 Contributing
 
@@ -78,10 +50,8 @@ Found something wrong? Have a use case to add? PRs welcome!
 
 ## 📝 About
 
-Built by Reem Sabawi - Technical Writer transitioning to DevRel.  
-Currently documenting my journey into AI development.
-
-- LinkedIn: [My Profile] (https://www.linkedin.com/in/reem-s-78187b1b9/)
+Built by [Reem Sabawi](https://www.linkedin.com/in/reem-sab/) - Technical Writer transitioning to DevRel.  
+Currently documenting my journey into AI development and building in public.
 
 ---
 

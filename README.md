@@ -31,7 +31,7 @@ I spent weeks working with both OpenAI and Anthropic APIs, digging through docs,
 - [x] Getting started guides
 - [x] Chatbot comparison
 - [ ] Code generation comparison
-- [ ] Cost calculator
+- [x] Interactive cost calculator tool ← NEW!
 - [ ] Migration guides
 
 ## 📖 Guides Available

@@ -25,15 +25,15 @@ I spent weeks working with both OpenAI and Anthropic APIs, digging through docs,
 - [Anthropic Claude API Quickstart](./getting-started/anthropic-quickstart.md) - Get started with Claude
 
 ### Deep Comparisons
-- [Building a Chatbot: OpenAI vs Anthropic](./comparisons/chatbot-comparison.md) - Side-by-side implementation with working code, cost analysis, and production considerations
+- [Building a Chatbot: OpenAI vs Anthropic](./comparisons/chatbot-comparisons.md) - Side-by-side implementation with working code, cost analysis, and production considerations
 
 ### 🛠️ Interactive Tools
 - **[Cost Calculator](./tools/cost-calculator.html)** - Compare monthly costs based on your usage  
   [Try it live →](https://reem-sab.github.io/ai-api-comparison/tools/cost-calculator.html)
 
 ### Code Examples
-- [OpenAI Basic Examples](./code-examples/openai-examples.md) - 6 copy-paste-ready patterns
-- [Anthropic Basic Examples](./code-examples/anthropic-examples.md) - 7 patterns including common gotchas
+- [OpenAI Basic Examples](./code-examples/openai-examples) - 6 copy-paste-ready patterns
+- [Anthropic Basic Examples](./code-examples/anthropic-examples) - 7 patterns including common gotchas
 
 ## 🗺️ Roadmap
 
